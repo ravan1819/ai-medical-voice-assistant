@@ -111,7 +111,7 @@ function App() {
       console.log(file);
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/process-audio",
+        `${import.meta.env.VITE_API_URL}/process-audio`,
         formData,
         {
           headers: {
