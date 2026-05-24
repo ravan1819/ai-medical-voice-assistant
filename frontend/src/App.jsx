@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
+import "./App.css";
 
 function App() {
 
@@ -218,7 +219,7 @@ function App() {
 
       <div className="max-w-6xl mx-auto px-6 pb-20">
 
-        <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
 
           {/* HEADER */}
 
@@ -301,7 +302,7 @@ function App() {
 
                 {/* TELUGU */}
 
-                <div className="bg-blue-50 border-l-[10px] border-blue-700 rounded-3xl p-10 shadow-xl">
+                <div className="bg-blue-50 border-l-8 border-blue-700 rounded-3xl p-10 shadow-xl">
 
                   <h2 className="text-4xl font-bold mb-6 text-blue-800">
                     Telugu Transcript
@@ -314,7 +315,7 @@ function App() {
 
                 {/* ENGLISH */}
 
-                <div className="bg-green-50 border-l-[10px] border-green-700 rounded-3xl p-10 shadow-xl">
+                <div className="bg-green-50 border-l-8 border-green-700 rounded-3xl p-10 shadow-xl">
 
                   <h2 className="text-4xl font-bold mb-6 text-green-800">
                     English Translation
@@ -327,7 +328,7 @@ function App() {
 
                 {/* REPORT */}
 
-                <div className="bg-red-50 border-l-[10px] border-red-700 rounded-3xl p-10 shadow-xl">
+                <div className="bg-red-50 border-l-8 border-red-700 rounded-3xl p-10 shadow-xl">
 
                   <h2 className="text-4xl font-bold mb-6 text-red-800">
                     Medical Report
@@ -396,7 +397,7 @@ function App() {
 
             {/* ABOUT DEVELOPER */}
 
-            <div className="mt-24 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-[40px] p-14 shadow-2xl text-center">
+            <div className="mt-24 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-3xl p-14 shadow-2xl text-center">
 
               <h2 className="text-5xl font-bold mb-10">
                 About Developer
@@ -413,14 +414,13 @@ function App() {
               <p className="text-xl leading-relaxed max-w-5xl mx-auto text-slate-200">
                 This AI Medical Voice Assistant project was developed using
                 FastAPI, React, NLP, Speech Recognition and Translation AI.
-                The system converts Telugu patient speech into structured
-                medical reports automatically using Natural Language Processing techniques.
               </p>
 
               <div className="mt-10 text-2xl font-semibold text-cyan-300">
                 📧 sravaniramadugu123@gmail.com
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -437,13 +437,6 @@ function App() {
           Developed by Sravani Ramadugu
         </p>
 
-        <p className="text-xl text-slate-400 mt-4">
-          sravaniramadugu123@gmail.com
-        </p>
-
-        <p className="text-lg text-slate-500 mt-6">
-          NLP • Healthcare AI • Speech Recognition • React • FastAPI
-        </p>
       </footer>
     </div>
   );
