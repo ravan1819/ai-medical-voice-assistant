@@ -127,14 +127,19 @@ function App() {
 
       setLoading(false);
 
-    } catch (error) {
+   } catch (error) {
 
-      console.log(error);
+  console.log(error);
 
-      alert("Error generating report");
+  console.log(error.response);
 
-      setLoading(false);
-    }
+  alert(
+    error.response?.data?.error ||
+    "Backend Processing Failed"
+  );
+
+  setLoading(false);
+}
   };
 
   return (
