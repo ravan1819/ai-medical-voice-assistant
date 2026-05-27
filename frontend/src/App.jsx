@@ -80,12 +80,21 @@ function App() {
 
       alert("Recording started... Speak now");
 
+  
+
     } catch (error) {
 
-      console.log(error);
+     console.log(error);
 
-      alert("Microphone permission denied");
-    }
+    console.log(error.response);
+
+    console.log(error.response?.data);
+
+    alert(JSON.stringify(error.response?.data));
+
+    setLoading(false);
+  }
+
   };
 
   // =========================
