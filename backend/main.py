@@ -488,22 +488,22 @@ async def process_audio(file: UploadFile = File(...)):
         # CONVERT TO WAV
 
         subprocess.run(
-    [
-        "ffmpeg",
-        "-y",
-        "-i",
-        file_path,
-        "-acodec",
-        "pcm_s16le",
-        "-ar",
-        "16000",
-        "-ac",
-        "1",
-        wav_path
-    ],
-    stdout=subprocess.DEVNULL,
-    stderr=subprocess.DEVNULL
-)
+            [
+                "ffmpeg",
+                "-y",
+                "-i",
+                file_path,
+                "-acodec",
+                "pcm_s16le",
+                "-ar",
+                "16000",
+                "-ac",
+                "1",
+                wav_path
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
 
         recognizer = sr.Recognizer()
 
@@ -563,7 +563,11 @@ async def process_audio(file: UploadFile = File(...)):
 
     except Exception as e:
 
-        print(str(e))
+        import traceback
+
+        error_message = traceback.format_exc()
+
+        print(error_message)
 
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -572,5 +576,5 @@ async def process_audio(file: UploadFile = File(...)):
             os.remove(wav_path)
 
         return {
-            "error": str(e)
+            "error": error_message
         }
