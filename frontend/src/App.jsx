@@ -133,11 +133,9 @@ function App() {
 
   console.log(error.response);
 
-  alert(
-    error.response?.data?.error ||
-    "Backend Processing Failed"
-  );
-
+ alert(
+  JSON.stringify(error.response?.data)
+);
   setLoading(false);
 }
   };
