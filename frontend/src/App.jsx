@@ -111,20 +111,20 @@ function App() {
 
       console.log(file);
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/process-audio`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+     
 
       console.log(response.data);
 
       setResult(response.data);
-
+      const response = await axios.post(
+  "https://ai-medical-voice-assistant-production.up.railway.app/process-audio",
+  formData,
+  {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  }
+);
       setLoading(false);
 
    } catch (error) {
