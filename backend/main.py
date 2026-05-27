@@ -487,13 +487,23 @@ async def process_audio(file: UploadFile = File(...)):
 
         # CONVERT TO WAV
 
-        subprocess.run([
-            "ffmpeg",
-            "-y",
-            "-i",
-            file_path,
-            wav_path
-        ])
+        subprocess.run(
+    [
+        "ffmpeg",
+        "-y",
+        "-i",
+        file_path,
+        "-acodec",
+        "pcm_s16le",
+        "-ar",
+        "16000",
+        "-ac",
+        "1",
+        wav_path
+    ],
+    stdout=subprocess.DEVNULL,
+    stderr=subprocess.DEVNULL
+)
 
         recognizer = sr.Recognizer()
 
