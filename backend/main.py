@@ -46,7 +46,7 @@ collection = db["patient_reports"]
 # LOAD NLP MODEL
 # ==========================================
 
-nlp = spacy.load("en_core_web_sm")
+#nlp = spacy.load("en_core_web_sm")
 
 # ==========================================
 # NUMBER WORDS
