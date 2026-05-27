@@ -470,45 +470,32 @@ def home():
 # ==========================================
 
 @app.post("/process-audio")
-
 async def process_audio(file: UploadFile = File(...)):
 
     file_path = f"temp_{file.filename}"
-
     wav_path = "converted.wav"
 
     try:
 
-        # SAVE AUDIO FILE
-
+        # SAVE FILE
         with open(file_path, "wb") as buffer:
-
             shutil.copyfileobj(file.file, buffer)
 
-        # CONVERT TO WAV
-
+        # CONVERT AUDIO TO WAV
         subprocess.run(
             [
                 "ffmpeg",
                 "-y",
                 "-i",
                 file_path,
-                "-acodec",
-                "pcm_s16le",
-                "-ar",
-                "16000",
-                "-ac",
-                "1",
                 wav_path
             ],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
+            check=True
         )
 
         recognizer = sr.Recognizer()
 
-        # SPEECH RECOGNITION
-
+        # READ AUDIO
         with sr.AudioFile(wav_path) as source:
 
             audio_data = recognizer.record(source)
@@ -518,27 +505,19 @@ async def process_audio(file: UploadFile = File(...)):
                 language="te-IN"
             )
 
-        # TRANSLATION
-
+        # TRANSLATE
         english_translation = GoogleTranslator(
-            source='te',
-            target='en'
+            source="te",
+            target="en"
         ).translate(telugu_text)
 
-        # EXTRACT INFORMATION
+        # NLP EXTRACTION
+        slots = extract_info(english_translation)
 
-        slots = extract_info(
-            english_translation
-        )
+        # REPORT
+        medical_report = generate_report(slots)
 
-        # GENERATE REPORT
-
-        medical_report = generate_report(
-            slots
-        )
-
-        # SAVE TO DATABASE
-
+        # SAVE DATABASE
         patient_data = {
             "telugu_text": telugu_text,
             "english_translation": english_translation,
@@ -547,8 +526,7 @@ async def process_audio(file: UploadFile = File(...)):
 
         collection.insert_one(patient_data)
 
-        # DELETE TEMP FILES
-
+        # DELETE FILES
         if os.path.exists(file_path):
             os.remove(file_path)
 
@@ -563,18 +541,8 @@ async def process_audio(file: UploadFile = File(...)):
 
     except Exception as e:
 
-        import traceback
-
-        error_message = traceback.format_exc()
-
-        print(error_message)
-
-        if os.path.exists(file_path):
-            os.remove(file_path)
-
-        if os.path.exists(wav_path):
-            os.remove(wav_path)
+        print("ERROR:", str(e))
 
         return {
-            "error": error_message
+            "error": str(e)
         }
