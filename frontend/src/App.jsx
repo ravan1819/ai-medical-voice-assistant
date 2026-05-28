@@ -120,15 +120,9 @@ function App() {
 
       console.log(file);
 
-     
-
-      console.log(response.data);
-
-      setResult(response.data);
-
 
       const response = await axios.post(
-  "https://ai-medical-voice-assistant-1.onrender.com/process-audio",
+  import.meta.env.VITE_API_URL + "/process-audio",
   formData,
   {
     headers: {

@@ -8,7 +8,6 @@ import shutil
 import os
 import re
 import subprocess
-import spacy
 
 from pymongo import MongoClient
 
@@ -34,19 +33,12 @@ app.add_middleware(
 # MONGODB CONNECTION
 # ==========================================
 
-MONGO_URL = os.getenv("mongodb+srv://sravani:Sravani%40123@cluster0.anzwhzn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
-client = MongoClient(MONGO_URL)
 
-db = client["medical_ai_db"]
 
-collection = db["patient_reports"]
+MONGO_URL = "mongodb+srv://sravani:Sravani%40123@cluster0.anzwhzn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
-# ==========================================
-# LOAD NLP MODEL
-# ==========================================
 
-#nlp = spacy.load("en_core_web_sm")
 
 # ==========================================
 # NUMBER WORDS
@@ -87,9 +79,7 @@ def extract_info(text):
 
     text_lower = text.lower()
 
-    # ==========================================
-    # NAME EXTRACTION
-    # ==========================================
+    # NAME
 
     name_patterns = [
         r"my name is ([a-zA-Z]+)",
@@ -108,9 +98,7 @@ def extract_info(text):
 
             break
 
-    # ==========================================
-    # AGE EXTRACTION
-    # ==========================================
+    # AGE
 
     age_patterns = [
         r"(\d+)\s*years old",
@@ -131,9 +119,7 @@ def extract_info(text):
 
             break
 
-    # ==========================================
-    # GENDER EXTRACTION
-    # ==========================================
+    # GENDER
 
     if any(word in text_lower for word in [
         "female",
@@ -151,9 +137,7 @@ def extract_info(text):
 
         slots["gender"] = "Male"
 
-    # ==========================================
-    # SYMPTOMS EXTRACTION
-    # ==========================================
+    # SYMPTOMS
 
     symptom_rules = {
         "fever": ["fever"],
@@ -169,24 +153,12 @@ def extract_info(text):
         ],
         "weakness": ["weak", "weakness"],
         "fatigue": ["tired", "fatigue"],
-        "loss of appetite": [
-            "loss of appetite",
-            "appetite loss",
-            "lost my appetite",
-            "appetite decreased"
-        ],
         "vomiting": ["vomiting"],
         "nausea": ["nausea"],
         "dizziness": ["dizziness"],
         "chest pain": ["chest pain"],
         "back pain": ["back pain"],
         "throat pain": ["throat pain", "sore throat"],
-        "breathing difficulty": [
-            "breathing difficulty",
-            "breathlessness"
-        ],
-        "diarrhea": ["diarrhea"],
-        "constipation": ["constipation"],
     }
 
     for symptom, keywords in symptom_rules.items():
@@ -199,21 +171,12 @@ def extract_info(text):
 
                 break
 
-    # ==========================================
-    # DURATION EXTRACTION
-    # ==========================================
+    # DURATION
 
     duration_patterns = [
         r"for (\w+ days)",
-        r"for the past (\w+ days)",
-        r"for past (\w+ days)",
-        r"past (\w+ days)",
-        r"for last (\w+ days)",
-        r"since (\w+ days)",
         r"for (\w+ weeks)",
-        r"for (\w+ months)",
-        r"since (\w+ weeks)",
-        r"since (\w+ months)"
+        r"for (\w+ months)"
     ]
 
     for pattern in duration_patterns:
@@ -226,133 +189,11 @@ def extract_info(text):
 
             break
 
-    # ==========================================
-    # MEDICAL HISTORY
-    # ==========================================
-
-    disease_keywords = [
-        "diabetes",
-        "hypertension",
-        "bp",
-        "asthma",
-        "thyroid",
-        "heart disease",
-        "cancer",
-        "tuberculosis",
-        "covid",
-        "arthritis",
-        "migraine",
-        "kidney disease",
-        "liver disease",
-        "chicken pox",
-    ]
-
-    for disease in disease_keywords:
-
-        if disease in text_lower:
-
-            slots["medical_history"].append(disease)
-
-    # ==========================================
-    # FAMILY HISTORY
-    # ==========================================
-
-    family_patterns = [
-        r"father has ([a-zA-Z ]+)",
-        r"mother has ([a-zA-Z ]+)",
-        r"my father has ([a-zA-Z ]+)",
-        r"my mother has ([a-zA-Z ]+)",
-        r"family history of ([a-zA-Z ]+)"
-    ]
-
-    for pattern in family_patterns:
-
-        matches = re.findall(pattern, text_lower)
-
-        for m in matches:
-
-            cleaned = m.strip()
-
-            if len(cleaned) > 2:
-
-                slots["family_history"].append(cleaned)
-
-    # ==========================================
-    # MEDICATIONS
-    # ==========================================
-
-    medication_patterns = [
-        r"taking ([a-zA-Z0-9 ]+)",
-        r"using ([a-zA-Z0-9 ]+)",
-        r"on ([a-zA-Z0-9 ]+) medication",
-    ]
-
-    for pattern in medication_patterns:
-
-        match = re.search(pattern, text_lower)
-
-        if match:
-
-            medicine = match.group(1).strip()
-
-            slots["medications"].append(medicine)
-
-    # ==========================================
-    # ALLERGIES
-    # ==========================================
-
-    allergy_patterns = [
-        r"allergic to ([a-zA-Z ]+?)(?: i have| pain|$)",
-        r"allergy to ([a-zA-Z ]+?)(?: i have| pain|$)",
-    ]
-
-    for pattern in allergy_patterns:
-
-        match = re.search(pattern, text_lower)
-
-        if match:
-
-            allergy_text = match.group(1).strip()
-
-            allergy_text = allergy_text.replace("and", "").strip()
-
-            slots["allergies"].append(allergy_text)
-
-    # ==========================================
-    # SOCIAL HISTORY
-    # ==========================================
-
-    if any(word in text_lower for word in [
-        "smoke",
-        "smoking",
-        "cigarette",
-        "cigarettes",
-        "tobacco"
-    ]):
-
-        slots["social_history"].append("Smoking")
-
-    if any(word in text_lower for word in [
-        "alcohol",
-        "drink",
-        "drinking"
-    ]):
-
-        slots["social_history"].append("Alcohol consumption")
-
-    if "drug" in text_lower:
-
-        slots["social_history"].append("Drug use")
-
-    # ==========================================
-    # PAIN SCORE EXTRACTION
-    # ==========================================
+    # PAIN SCORE
 
     pain_patterns = [
         r"pain score is (\w+)",
         r"pain level is (\w+)",
-        r"pain score (\w+)",
-        r"pain scale (\w+)",
     ]
 
     for pattern in pain_patterns:
@@ -373,21 +214,7 @@ def extract_info(text):
                     number_words[pain_value] + "/10"
                 )
 
-    if "seven out of ten" in text_lower:
-        slots["pain_score"] = "7/10"
-
-    elif "eight out of ten" in text_lower:
-        slots["pain_score"] = "8/10"
-
-    elif "eight on the pain scale" in text_lower:
-        slots["pain_score"] = "8/10"
-
-    elif "nine out of ten" in text_lower:
-        slots["pain_score"] = "9/10"
-
-    # ==========================================
     # CLEANUP
-    # ==========================================
 
     for key in slots:
 
@@ -430,21 +257,6 @@ def generate_report(slots):
 ⏳ Duration:
 {slots["duration"]}
 
-🏥 Medical History:
-{slots["medical_history"]}
-
-👨‍👩‍👧 Family History:
-{slots["family_history"]}
-
-💊 Medications:
-{slots["medications"]}
-
-⚠ Allergies:
-{slots["allergies"]}
-
-🍺 Social History:
-{slots["social_history"]}
-
 📊 Pain Score:
 {slots["pain_score"]}
 
@@ -466,6 +278,8 @@ def home():
     }
 
 # ==========================================
+
+# ==========================================
 # PROCESS AUDIO API
 # ==========================================
 
@@ -477,21 +291,34 @@ async def process_audio(file: UploadFile = File(...)):
 
     try:
 
+        print("STEP 1: Saving audio")
+
         # SAVE FILE
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        # CONVERT AUDIO TO WAV
+        print("STEP 2: Converting audio")
+
+        # CONVERT AUDIO
         subprocess.run(
             [
                 "ffmpeg",
                 "-y",
                 "-i",
                 file_path,
+                "-acodec",
+                "pcm_s16le",
+                "-ar",
+                "16000",
+                "-ac",
+                "1",
                 wav_path
             ],
-            check=True
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
         )
+
+        print("STEP 3: Loading recognizer")
 
         recognizer = sr.Recognizer()
 
@@ -500,38 +327,42 @@ async def process_audio(file: UploadFile = File(...)):
 
             audio_data = recognizer.record(source)
 
-            telugu_text = recognizer.recognize_google(
-                audio_data,
-                language="te-IN"
-            )
+        print("STEP 4: Speech recognition")
 
-        # TRANSLATE
+        telugu_text = recognizer.recognize_google(
+            audio_data,
+            language="te-IN"
+        )
+
+        print("STEP 5: Translation")
+
+        # TRANSLATION
         english_translation = GoogleTranslator(
             source="te",
             target="en"
         ).translate(telugu_text)
 
+        print("STEP 6: NLP Extraction")
+
         # NLP EXTRACTION
         slots = extract_info(english_translation)
+
+        print("STEP 7: Report generation")
 
         # REPORT
         medical_report = generate_report(slots)
 
-        # SAVE DATABASE
-        patient_data = {
-            "telugu_text": telugu_text,
-            "english_translation": english_translation,
-            "medical_report": medical_report
-        }
+        print("STEP 8: Database save")
 
-        collection.insert_one(patient_data)
 
-        # DELETE FILES
+        # DELETE TEMP FILES
         if os.path.exists(file_path):
             os.remove(file_path)
 
         if os.path.exists(wav_path):
             os.remove(wav_path)
+
+        print("STEP 9: Completed")
 
         return {
             "telugu_text": telugu_text,
