@@ -126,7 +126,7 @@ function App() {
 
       setResult(response.data);
       const response = await axios.post(
-  "https://ai-medical-voice-assistant-production.up.railway.app/process-audio",
+  "https://ai-medical-voice-assistant-1.onrender.com/process-audio",
   formData,
   {
     headers: {
