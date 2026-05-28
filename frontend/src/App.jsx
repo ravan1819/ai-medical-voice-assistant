@@ -125,6 +125,8 @@ function App() {
       console.log(response.data);
 
       setResult(response.data);
+
+
       const response = await axios.post(
   "https://ai-medical-voice-assistant-1.onrender.com/process-audio",
   formData,
@@ -134,19 +136,25 @@ function App() {
     },
   }
 );
-      setLoading(false);
 
-   } catch (error) {
+console.log(response.data);
+
+setResult(response.data);
+
+setLoading(false);
+
+
+} catch (error) {
 
   console.log(error);
 
   console.log(error.response);
 
- alert(
-  JSON.stringify(error.response?.data)
-);
+  alert(JSON.stringify(error.response?.data));
+
   setLoading(false);
 }
+
   };
 
   return (
