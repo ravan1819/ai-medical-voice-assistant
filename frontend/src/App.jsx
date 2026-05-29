@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
 import "./App.css";
 
 function App() {
@@ -15,6 +16,8 @@ function App() {
   const mediaRecorderRef = useRef(null);
 
   const audioChunksRef = useRef([]);
+
+  const [audioURL, setAudioURL] = useState("");
 
   // =========================
   // RECORD AUDIO
@@ -71,6 +74,9 @@ function App() {
 
         setFile(audioFile);
 
+        const url = URL.createObjectURL(audioBlob);
+setAudioURL(url);
+
         alert("Recording completed successfully!");
       };
 
@@ -90,12 +96,17 @@ function App() {
 
     console.log(error.response?.data);
 
-    alert(JSON.stringify(error.response?.data));
+    alert(
+  error.response?.data?.error ||
+  error.message ||
+  "Failed to generate report"
+);
 
     setLoading(false);
   }
 
   };
+
 
   // =========================
   // GENERATE REPORT
@@ -133,26 +144,43 @@ const response = await axios.post(
 );
 
 
-
 console.log(response.data);
 
 setResult(response.data);
 
+alert("Medical report generated successfully!");
+
 setLoading(false);
+
 
 
 } catch (error) {
 
   console.log(error);
 
-  console.log(error.response);
-
-  alert(JSON.stringify(error.response?.data));
+  alert(error.message || "Microphone access denied");
 
   setLoading(false);
 }
-
   };
+
+const downloadPDF = () => {
+
+  if (!result) return;
+
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("AI Medical Report", 20, 20);
+
+  doc.setFontSize(12);
+  doc.text(`Telugu Text: ${result.telugu_text}`, 20, 40);
+  doc.text(`English Translation: ${result.english_translation}`, 20, 60);
+
+  doc.text(result.medical_report, 20, 90);
+
+  doc.save("Medical_Report.pdf");
+};
 
   return (
 
@@ -277,6 +305,19 @@ setLoading(false);
               <p className="mt-5 text-xl text-gray-500">
                 Click again to stop recording
               </p>
+               {audioURL && (
+  <div className="text-center mb-8">
+    <h3 className="text-xl font-bold mb-3">
+      Recorded Audio Preview
+    </h3>
+
+    <audio controls className="mx-auto">
+      <source src={audioURL} type="audio/webm" />
+      Your browser does not support audio playback.
+    </audio>
+  </div>
+)}
+
             </div>
 
             {/* FILE UPLOAD */}
@@ -313,52 +354,70 @@ setLoading(false);
 
             {/* RESULTS */}
 
-            {result && (
+          
+{result && (
 
-              <div className="space-y-10">
+  <>
+    <div className="text-center mb-8">
+      <button
+        onClick={downloadPDF}
+        className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-bold"
+      >
+        Download PDF Report
+      </button>
+    </div>
 
-                {/* TELUGU */}
+    <div className="space-y-10">
 
-                <div className="bg-blue-50 border-l-8 border-blue-700 rounded-3xl p-10 shadow-xl">
+      {/* TELUGU */}
 
-                  <h2 className="text-4xl font-bold mb-6 text-blue-800">
-                    Telugu Transcript
-                  </h2>
+      <div className="bg-blue-50 border-l-8 border-blue-700 rounded-3xl p-10 shadow-xl">
 
-                  <p className="text-2xl leading-relaxed text-slate-700">
-                    {result.telugu_text}
-                  </p>
-                </div>
+        <h2 className="text-4xl font-bold mb-6 text-blue-800">
+          Telugu Transcript
+        </h2>
 
-                {/* ENGLISH */}
+        <p className="text-2xl leading-relaxed text-slate-700">
+          {result.telugu_text}
+        </p>
 
-                <div className="bg-green-50 border-l-8 border-green-700 rounded-3xl p-10 shadow-xl">
+      </div>
 
-                  <h2 className="text-4xl font-bold mb-6 text-green-800">
-                    English Translation
-                  </h2>
+      {/* ENGLISH */}
 
-                  <p className="text-2xl leading-relaxed text-slate-700">
-                    {result.english_translation}
-                  </p>
-                </div>
+      <div className="bg-green-50 border-l-8 border-green-700 rounded-3xl p-10 shadow-xl">
 
-                {/* REPORT */}
+        <h2 className="text-4xl font-bold mb-6 text-green-800">
+          English Translation
+        </h2>
 
-                <div className="bg-red-50 border-l-8 border-red-700 rounded-3xl p-10 shadow-xl">
+        <p className="text-2xl leading-relaxed text-slate-700">
+          {result.english_translation}
+        </p>
 
-                  <h2 className="text-4xl font-bold mb-6 text-red-800">
-                    Medical Report
-                  </h2>
+      </div>
 
-                  <pre className="whitespace-pre-wrap text-xl leading-relaxed bg-white p-8 rounded-2xl overflow-auto shadow-inner">
+      {/* REPORT */}
 
-                    {result.medical_report}
+      <div className="bg-red-50 border-l-8 border-red-700 rounded-3xl p-10 shadow-xl">
 
-                  </pre>
-                </div>
-              </div>
-            )}
+        <h2 className="text-4xl font-bold mb-6 text-red-800">
+          Medical Report
+        </h2>
+
+        <pre className="whitespace-pre-wrap text-xl leading-relaxed bg-white p-8 rounded-2xl overflow-auto shadow-inner">
+          {result.medical_report}
+        </pre>
+
+      </div>
+
+    </div>
+
+  </>
+
+)}
+
+
 
             {/* TECHNOLOGIES */}
 
