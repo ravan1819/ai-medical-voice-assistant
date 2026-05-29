@@ -245,19 +245,19 @@ def generate_report(slots):
 👤 Patient Name:
 {slots["name"]}
 
-🎂 Age:
+ Age:
 {slots["age"]}
 
 ⚧ Gender:
 {slots["gender"]}
 
-🤒 Symptoms:
+ Symptoms:
 {slots["symptoms"]}
 
-⏳ Duration:
+ Duration:
 {slots["duration"]}
 
-📊 Pain Score:
+ Pain Score:
 {slots["pain_score"]}
 
 ==================================================
