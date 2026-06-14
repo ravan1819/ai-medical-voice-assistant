@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import "./App.css";
+import gitamLogo from "./assets/gitam.logo.png";
 
 function App() {
 
@@ -471,49 +472,88 @@ const downloadPDF = () => {
               </div>
             </div>
 
-            {/* ABOUT DEVELOPER */}
+{/* PROJECT TEAM */}
 
-            <div className="mt-24 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-3xl p-14 shadow-2xl text-center">
+<div className="mt-24 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-3xl p-14 shadow-2xl text-center">
 
-              <h2 className="text-5xl font-bold mb-10">
-                About Developer
-              </h2>
+  <h2 className="text-5xl font-bold mb-14">
+    Project Team
+  </h2>
 
-              <h3 className="text-4xl font-bold mb-5 text-cyan-300">
-                Sravani Ramadugu
-              </h3>
+  <div className="grid md:grid-cols-3 gap-10">
 
-              <p className="text-2xl text-slate-300 mb-8">
-                Data Science & NLP Enthusiast
-              </p>
+    <div>
+      <h3 className="text-3xl font-bold text-cyan-300 mb-4">
+        Developed By
+      </h3>
 
-              <p className="text-xl leading-relaxed max-w-5xl mx-auto text-slate-200">
-                This AI Medical Voice Assistant project was developed using
-                FastAPI, React, NLP, Speech Recognition and Translation AI.
-              </p>
+      <p className="text-2xl text-slate-300">
+        Sravani Ramadugu
+      </p>
+    </div>
 
-              <div className="mt-10 text-2xl font-semibold text-cyan-300">
-                📧 sravaniramadugu123@gmail.com
-              </div>
-            </div>
+    <div>
+      <h3 className="text-3xl font-bold text-cyan-300 mb-4">
+        Team Member
+      </h3>
+
+      <p className="text-2xl text-slate-300">
+        HemaLatha Devadi
+      </p>
+    </div>
+
+    <div>
+      <h3 className="text-3xl font-bold text-cyan-300 mb-4">
+        Guided Under
+      </h3>
+
+      <p className="text-2xl text-slate-300">
+        Dr. Motahar Reza
+      </p>
+    </div>
+
+  </div>
+
+  <div className="mt-12 flex justify-center">
+    <img
+      src={gitamLogo}
+      alt="GITAM University"
+      className="w-40 h-auto rounded-xl shadow-lg"
+    />
+  </div>
+
+  <p className="mt-4 text-lg text-slate-400">
+    GITAM Deemed to be University
+  </p>
+
+</div>
+
+{/* FOOTER */}
+
+
+<footer className="bg-slate-950 text-white text-center py-14">
+
+  <div className="mt-10 border-t border-slate-600 pt-6">
+  <p className="text-lg text-slate-400">
+  M.Sc Data Science
+</p>
+
+  <p className="text-lg text-slate-400">
+    GITAM Deemed to be University
+  </p>
+
+  <p className="text-lg text-slate-400">
+    Academic Year 2025-26
+  </p>
+</div>
+
+
+</footer>
 
           </div>
         </div>
       </div>
 
-      {/* FOOTER */}
-
-      <footer className="bg-slate-950 text-white text-center py-14">
-
-        <h2 className="text-4xl font-bold mb-5">
-          AI Medical Voice Assistant
-        </h2>
-
-        <p className="text-2xl text-slate-300">
-          Developed by Sravani Ramadugu
-        </p>
-
-      </footer>
     </div>
   );
 }
