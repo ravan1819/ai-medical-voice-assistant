@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import "./App.css";
-import gitamLogo from "./assets/gitam.logo.png";
 
 function App() {
 
@@ -514,13 +513,15 @@ const downloadPDF = () => {
 
   </div>
 
-  <div className="mt-12 flex justify-center">
-    <img
-      src={gitamLogo}
-      alt="GITAM University"
-      className="w-40 h-auto rounded-xl shadow-lg"
-    />
-  </div>
+ {/* 
+<div className="mt-12 flex justify-center">
+  <img
+    src={gitamLogo}
+    alt="GITAM University"
+    className="w-40 h-auto rounded-xl shadow-lg"
+  />
+</div>
+*/}
 
   <p className="mt-4 text-lg text-slate-400">
     GITAM Deemed to be University
