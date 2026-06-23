@@ -513,15 +513,15 @@ const downloadPDF = () => {
 
   </div>
 
- {/* 
+ 
 <div className="mt-12 flex justify-center">
   <img
-    src={gitamLogo}
-    alt="GITAM University"
-    className="w-40 h-auto rounded-xl shadow-lg"
-  />
+  src="/gitam.logo.png"
+  alt="GITAM University"
+  className="w-32 h-auto mb-4"
+/>
 </div>
-*/}
+
 
   <p className="mt-4 text-lg text-slate-400">
     GITAM Deemed to be University
